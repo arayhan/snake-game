@@ -46,7 +46,7 @@ const SCORE = {
 };
 
 const LIFE = {
-    count: 3,
+    value: 3,
     position: {
         x: 10,
         y: 10,
@@ -130,7 +130,7 @@ function drawLife() {
     let img = new Image();
     img.src = "/assets/images/heart-red.png";
 
-    for (let i = 0; i < LIFE.count; i++) {
+    for (let i = 0; i < LIFE.value; i++) {
         const margin = i * 3;
         lifeCtx.drawImage(
             img,
@@ -149,12 +149,16 @@ function drawSnake() {
 
 function startGame() {
     function eat() {
+        let eat = new Audio();
+        eat.src = "./assets/sounds/eat.mp3";
+
         APPLE.forEach(function (apple, index) {
             if (
                 SNAKE.position.x == apple.position.x &&
                 SNAKE.position.y == apple.position.y
             ) {
                 SCORE.value += 1;
+                eat.play();
                 APPLE[index].position.x = initPosition();
                 APPLE[index].position.y = initPosition();
             }
@@ -167,6 +171,7 @@ function startGame() {
                 SNAKE.position.x == heart.position.x &&
                 SNAKE.position.y == heart.position.y
             ) {
+                LIFE.value += 1;
                 HEART[index].position.x = initPosition();
                 HEART[index].position.y = initPosition();
             }
