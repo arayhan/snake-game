@@ -119,12 +119,15 @@ function drawSnake() {
 
 function startGame() {
     function eat() {
+        let eat = new Audio();
+        eat.src = "./assets/audio/eat.mp3";
         APPLE.forEach(function (apple, index) {
             if (
                 SNAKE.position.x == apple.position.x &&
                 SNAKE.position.y == apple.position.y
             ) {
                 SCORE.value += 1;
+                eat.play();
                 APPLE[index].position.x = initPosition();
                 APPLE[index].position.y = initPosition();
             }
@@ -170,18 +173,34 @@ function startGame() {
         eat();
     }
 
+    // load audio files
+
+    let up = new Audio();
+    let right = new Audio();
+    let left = new Audio();
+    let down = new Audio();
+
+    up.src = "./assets/audio/up.mp3";
+    down.src = "./assets/audio/down.mp3";
+    right.src = "./assets/audio/right.mp3";
+    left.src = "./assets/audio/left.mp3";
+
     document.addEventListener("keydown", function (event) {
         if (event.key === "ArrowLeft") {
+            left.play();
             moveLeft();
             SNAKE.direction = DIRECTION.LEFT;
         } else if (event.key === "ArrowRight") {
             moveRight();
+            right.play();
             SNAKE.direction = DIRECTION.RIGHT;
         } else if (event.key === "ArrowUp") {
             moveUp();
+            up.play();
             SNAKE.direction = DIRECTION.UP;
         } else if (event.key === "ArrowDown") {
             moveDown();
+            down.play();
             SNAKE.direction = DIRECTION.DOWN;
         }
     });
