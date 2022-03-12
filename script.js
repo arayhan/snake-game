@@ -14,6 +14,12 @@ const CELL_SIZE = 20;
 const SNAKE_COLOR = "orange";
 const REDRAW_INTERVAL = 20;
 const SNAKE_INTERVAL = 80;
+const DIRECTION = {
+    LEFT: 0,
+    RIGHT: 1,
+    UP: 2,
+    DOWN: 3,
+};
 
 // ==========================================
 // SECTION: HELPER FUNCTIONS
@@ -25,6 +31,10 @@ function clearCanvas() {
 
 function initPosition() {
     return Math.floor(Math.random() * (CANVAS_SIZE / CELL_SIZE)) * CELL_SIZE;
+}
+
+function initDirection() {
+    return Math.floor(Math.random() * 4);
 }
 
 // ==========================================
@@ -64,6 +74,7 @@ const SNAKE = {
         x: initPosition(),
         y: initPosition(),
     },
+    direction: initDirection(),
 };
 
 // ==========================================
@@ -162,12 +173,16 @@ function startGame() {
     document.addEventListener("keydown", function (event) {
         if (event.key === "ArrowLeft") {
             moveLeft();
+            SNAKE.direction = DIRECTION.LEFT;
         } else if (event.key === "ArrowRight") {
             moveRight();
+            SNAKE.direction = DIRECTION.RIGHT;
         } else if (event.key === "ArrowUp") {
             moveUp();
+            SNAKE.direction = DIRECTION.UP;
         } else if (event.key === "ArrowDown") {
             moveDown();
+            SNAKE.direction = DIRECTION.DOWN;
         }
     });
 
@@ -180,7 +195,20 @@ function startGame() {
     }, REDRAW_INTERVAL);
 
     setInterval(function () {
-        moveRight();
+        switch (SNAKE.direction) {
+            case DIRECTION.LEFT:
+                moveLeft();
+                break;
+            case DIRECTION.RIGHT:
+                moveRight();
+                break;
+            case DIRECTION.DOWN:
+                moveDown();
+                break;
+            case DIRECTION.UP:
+                moveUp();
+                break;
+        }
     }, SNAKE_INTERVAL);
 }
 
