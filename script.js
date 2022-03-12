@@ -13,6 +13,7 @@ const CANVAS_SIZE = snakeCtx.canvas.width;
 const CELL_SIZE = 20;
 const SNAKE_COLOR = "orange";
 const REDRAW_INTERVAL = 20;
+const SNAKE_INTERVAL = 80;
 
 // ==========================================
 // SECTION: HELPER FUNCTIONS
@@ -177,6 +178,10 @@ function startGame() {
         drawSnake();
         drawApple();
     }, REDRAW_INTERVAL);
+
+    setInterval(function () {
+        moveRight();
+    }, SNAKE_INTERVAL);
 }
 
 // ==========================================
