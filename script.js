@@ -137,15 +137,18 @@ function drawSnake() {
 
 function startGame() {
     function eat() {
+        let eat = new Audio();
+        eat.src = "./assets/sounds/eat.mp3";
+
         APPLE.forEach(function(apple, index) {
             if (
                 SNAKE.position.x == apple.position.x &&
                 SNAKE.position.y == apple.position.y
             ) {
                 SCORE.value += 1;
+                eat.play();
                 APPLE[index].position.x = initPosition();
                 APPLE[index].position.y = initPosition();
-
             }
         });
     }
