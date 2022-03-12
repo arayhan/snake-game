@@ -36,7 +36,7 @@ const SCORE = {
 };
 
 const LIFE = {
-    count: 3,
+    value: 3,
     position: {
         x: 10,
         y: 10,
@@ -118,7 +118,7 @@ function drawLife() {
     let img = new Image();
     img.src = "/assets/images/heart-red.png";
 
-    for (let i = 0; i < LIFE.count; i++) {
+    for (let i = 0; i < LIFE.value; i++) {
         const margin = i * 3;
         lifeCtx.drawImage(
             img,
@@ -156,6 +156,7 @@ function startGame() {
                 SNAKE.position.x == heart.position.x &&
                 SNAKE.position.y == heart.position.y
             ) {
+                LIFE.value += 1;
                 HEART[index].position.x = initPosition();
                 HEART[index].position.y = initPosition();
             }
