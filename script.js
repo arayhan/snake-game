@@ -10,14 +10,12 @@ const CELL_SIZE = 20;
 const SNAKE_COLOR = "orange";
 const REDRAW_INTERVAL = 20;
 
-// ========================================== SECTION: GAMEPLAY
+function clearCanvas() {
+    snakeCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+}
+
 function initPosition() {
-    return {
-        x: Math.floor(Math.random() * (CANVAS_SIZE - CELL_SIZE)),
-        x: Math.floor(Math.random() * (CANVAS_SIZE - CELL_SIZE)),
-        y: Math.floor(Math.random() * (CANVAS_SIZE - CELL_SIZE)),
-        y: Math.floor(Math.random() * (CANVAS_SIZE - CELL_SIZE)),
-    };
+    return Math.floor(Math.random() * (CANVAS_SIZE / CELL_SIZE)) * CELL_SIZE;
 }
 
 const LIFE = {
@@ -28,38 +26,115 @@ const LIFE = {
     },
 };
 
-function clearCanvas() {
-    snakeCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-    snakeCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-    snakeCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+const APPLE = [
+    {
+        position: {
+            x: initPosition(),
+            y: initPosition(),
+        },
+        position: {
+            x: initPosition(),
+            y: initPosition(),
+        },
+    },
+];
+
+const SNAKE = {
+    position: {
+        x: initPosition(),
+        y: initPosition(),
+    },
+};
+
+function drawApple() {
+    let img = new Image();
+    img.src = "./assets/images/apple.png";
+
+    APPLE.forEach((apple) =>
+        snakeCtx.drawImage(
+            img,
+            apple.position.x,
+            apple.position.y,
+            CELL_SIZE,
+            CELL_SIZE
+        )
+    );
 }
 
-function drawSnake() {
-    snakeCtx.fillStyle = SNAKE_COLOR;
-    snakeCtx.fillRect(CELL_SIZE, CELL_SIZE, CELL_SIZE, CELL_SIZE);
-}
-
-function drawLife(count, x, y) {
+function drawLife() {
     let img = new Image();
     img.src = "/assets/images/heart-red.png";
 
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < LIFE.count; i++) {
         const margin = i * 3;
         lifeCtx.drawImage(
             img,
-            x + i * CELL_SIZE + margin,
-            y,
+            LIFE.position.x + i * CELL_SIZE + margin,
+            LIFE.position.y,
             CELL_SIZE,
             CELL_SIZE
         );
     }
 }
 
+function drawSnake() {
+    snakeCtx.fillStyle = SNAKE_COLOR;
+    snakeCtx.fillRect(SNAKE.position.x, SNAKE.position.y, CELL_SIZE, CELL_SIZE);
+}
+
 function startGame() {
+    function teleport() {
+        if (SNAKE.position.x < 0) {
+            SNAKE.position.x = CANVAS_SIZE - CELL_SIZE;
+        }
+        if (SNAKE.position.x >= CANVAS_SIZE) {
+            SNAKE.position.x = 0;
+        }
+        if (SNAKE.position.y < 0) {
+            SNAKE.position.y = CANVAS_SIZE - CELL_SIZE;
+        }
+        if (SNAKE.position.y >= CANVAS_SIZE) {
+            SNAKE.position.y = 0;
+        }
+    }
+
+    function moveLeft() {
+        SNAKE.position.x -= CELL_SIZE;
+        teleport();
+    }
+
+    function moveRight() {
+        SNAKE.position.x += CELL_SIZE;
+        teleport();
+    }
+
+    function moveDown() {
+        SNAKE.position.y += CELL_SIZE;
+        teleport();
+    }
+
+    function moveUp() {
+        SNAKE.position.y -= CELL_SIZE;
+        teleport();
+    }
+
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "ArrowLeft") {
+            moveLeft();
+        } else if (event.key === "ArrowRight") {
+            moveRight();
+        } else if (event.key === "ArrowUp") {
+            moveUp();
+        } else if (event.key === "ArrowDown") {
+            moveDown();
+        }
+    });
+
     setInterval(function () {
-        clearCanvas();
+        snakeCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+        drawLife();
         drawSnake();
-        drawLife(LIFE.count, LIFE.position.x, LIFE.position.y);
+        drawApple();
     }, REDRAW_INTERVAL);
 }
 
