@@ -4,7 +4,7 @@
 
 let snakeCanvas = document.getElementById("snakeBoard");
 let lifeCanvas = document.getElementById("lifeBoard");
-let elScoreValue = document.getElementById("scoreValue");
+let elScore = document.getElementById("score");
 
 let snakeCtx = snakeCanvas.getContext("2d");
 let lifeCtx = lifeCanvas.getContext("2d");
@@ -29,6 +29,10 @@ function initPosition() {
 // ==========================================
 // SECTION: OBJECTS
 // ==========================================
+
+const SCORE = {
+    value: 0,
+};
 
 const LIFE = {
     count: 3,
@@ -108,6 +112,7 @@ function startGame() {
                 SNAKE.position.x == apple.position.x &&
                 SNAKE.position.y == apple.position.y
             ) {
+                SCORE.value += 1;
                 APPLE[index].position.x = initPosition();
                 APPLE[index].position.y = initPosition();
             }
@@ -166,6 +171,7 @@ function startGame() {
     });
 
     setInterval(function () {
+        elScore.innerHTML = SCORE.value;
         snakeCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
         drawLife();
         drawSnake();
