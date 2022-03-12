@@ -65,19 +65,12 @@ const SNAKE = {
     },
 };
 
-const HEART = [{
-        position: {
-            x: initPosition(),
-            y: initPosition(),
-        },
+const HEART = {
+    position: {
+        x: initPosition(),
+        y: initPosition(),
     },
-    {
-        position: {
-            x: initPosition(),
-            y: initPosition(),
-        },
-    },
-];
+};
 
 // ==========================================
 // SECTION: GAMEPLAY
@@ -102,16 +95,13 @@ function drawHeart() {
     let img = new Image();
     img.src = "/assets/images/heart-red.png";
 
-    HEART.forEach((heart) =>
-        snakeCtx.drawImage(
-            img,
-            heart.position.x,
-            heart.position.y,
-            CELL_SIZE,
-            CELL_SIZE
-        )
+    snakeCtx.drawImage(
+        img,
+        HEART.position.x,
+        HEART.position.y,
+        CELL_SIZE,
+        CELL_SIZE
     );
-
 }
 
 function drawLife() {
@@ -157,18 +147,16 @@ function startGame() {
         let life = new Audio();
         life.src = "./assets/sounds/life.wav";
 
-        HEART.forEach(function(heart, index) {
-            if (
-                SNAKE.position.x == heart.position.x &&
-                SNAKE.position.y == heart.position.y
-            ) {
-                LIFE.value += 1;
-                life.play();
-                HEART[index].position.x = initPosition();
-                HEART[index].position.y = initPosition();
-            }
-        });
+        if (
+            SNAKE.position.x == HEART.position.x &&
+            SNAKE.position.y == HEART.position.y
+        ) {
+            LIFE.value += 1;
+            life.play();
+            HEART.position.x = initPosition();
+            HEART.position.y = initPosition();
 
+        }
     }
 
     function teleport() {
