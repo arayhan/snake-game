@@ -154,12 +154,16 @@ function startGame() {
     }
 
     function eatHeart() {
+        let life = new Audio();
+        life.src = "./assets/sounds/life.wav";
+
         HEART.forEach(function(heart, index) {
             if (
                 SNAKE.position.x == heart.position.x &&
                 SNAKE.position.y == heart.position.y
             ) {
                 LIFE.value += 1;
+                life.play();
                 HEART[index].position.x = initPosition();
                 HEART[index].position.y = initPosition();
             }
