@@ -1,3 +1,6 @@
+// ================================================
+// SECTION: INITIALIZATION
+// ================================================
 const CELL_SIZE = 20;
 const SNAKE_COLOR = "orange";
 const CANVAR_SIZE = 600;
@@ -8,13 +11,42 @@ let ctx = snakeCanvas.getContext("2d");
 ctx.canvas.width = CANVAR_SIZE;
 ctx.canvas.height = CANVAR_SIZE;
 
+// ================================================
+// SECTION: GAMEPLAY
+// ================================================
+function drawSnake() {
+    ctx.fillStyle = SNAKE_COLOR;
+    ctx.fillRect(CELL_SIZE, CELL_SIZE, CELL_SIZE, CELL_SIZE);
+}
+
+function drawLife() {
+    let img = new Image();
+    img.src = "./assets/images/heart-black.png";
+
+    ctx.drawImage(
+        img,
+        apple.position.x * CELL_SIZE,
+        apple.position.y * CELL_SIZE,
+        CELL_SIZE,
+        CELL_SIZE
+    );
+}
+
+function startGame() {
+    ctx.clearRect(0, 0, CANVAR_SIZE, CANVAR_SIZE);
+
+    drawSnake();
+    drawLife();
+}
+
+// ================================================
+// SECTION: START MENU
+// ================================================
 const drawTitle = () => {
     ctx.font = "24px Lalezar";
     ctx.textAlign = "center";
     ctx.fillText("START GAME", CANVAR_SIZE / 2, CANVAR_SIZE / 2);
-};
 
-const drawSubTitle = () => {
     ctx.font = "18px Fredoka";
     ctx.textAlign = "center";
     ctx.fillText(
@@ -24,25 +56,15 @@ const drawSubTitle = () => {
     );
 };
 
-function drawLifes() {}
-
-function startGame() {
-    ctx.clearRect(0, 0, CANVAR_SIZE, CANVAR_SIZE);
-    ctx.fillStyle = SNAKE_COLOR;
-    ctx.fillRect(CELL_SIZE, CELL_SIZE, CELL_SIZE, CELL_SIZE);
-}
-
 function startMenu() {
     drawTitle();
-    drawSubTitle();
 
-    document.addEventListener(
-        "keydown",
-        () => {
-            startGame();
-        },
-        false
-    );
+    document.addEventListener("keydown", function () {
+        startGame();
+    });
 }
 
+// ================================================
+// SECTION: INITIATION
+// ================================================
 startGame();
