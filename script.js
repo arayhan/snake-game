@@ -14,6 +14,12 @@ const CELL_SIZE = 20;
 const SNAKE_COLOR = "orange";
 const REDRAW_INTERVAL = 20;
 const SNAKE_INTERVAL = 80;
+const DIRECTION = {
+    LEFT: 0,
+    RIGHT: 1,
+    UP: 2,
+    DOWN: 3,
+};
 
 // ==========================================
 // SECTION: HELPER FUNCTIONS
@@ -25,6 +31,10 @@ function clearCanvas() {
 
 function initPosition() {
     return Math.floor(Math.random() * (CANVAS_SIZE / CELL_SIZE)) * CELL_SIZE;
+}
+
+function initDirection() {
+    return Math.floor(Math.random() * 4);
 }
 
 // ==========================================
@@ -43,7 +53,8 @@ const LIFE = {
     },
 };
 
-const APPLE = [{
+const APPLE = [
+    {
         position: {
             x: initPosition(),
             y: initPosition(),
@@ -63,9 +74,11 @@ const SNAKE = {
         x: initPosition(),
         y: initPosition(),
     },
+    direction: initDirection(),
 };
 
-const HEART = [{
+const HEART = [
+    {
         position: {
             x: initPosition(),
             y: initPosition(),
@@ -111,7 +124,6 @@ function drawHeart() {
             CELL_SIZE
         )
     );
-
 }
 
 function drawLife() {
@@ -137,7 +149,7 @@ function drawSnake() {
 
 function startGame() {
     function eat() {
-        APPLE.forEach(function(apple, index) {
+        APPLE.forEach(function (apple, index) {
             if (
                 SNAKE.position.x == apple.position.x &&
                 SNAKE.position.y == apple.position.y
@@ -145,13 +157,12 @@ function startGame() {
                 SCORE.value += 1;
                 APPLE[index].position.x = initPosition();
                 APPLE[index].position.y = initPosition();
-
             }
         });
     }
 
     function eatHeart() {
-        HEART.forEach(function(heart, index) {
+        HEART.forEach(function (heart, index) {
             if (
                 SNAKE.position.x == heart.position.x &&
                 SNAKE.position.y == heart.position.y
@@ -160,7 +171,6 @@ function startGame() {
                 HEART[index].position.y = initPosition();
             }
         });
-
     }
 
     function teleport() {
@@ -206,19 +216,23 @@ function startGame() {
         eatHeart();
     }
 
-    document.addEventListener("keydown", function(event) {
+    document.addEventListener("keydown", function (event) {
         if (event.key === "ArrowLeft") {
             moveLeft();
+            SNAKE.direction = DIRECTION.LEFT;
         } else if (event.key === "ArrowRight") {
             moveRight();
+            SNAKE.direction = DIRECTION.RIGHT;
         } else if (event.key === "ArrowUp") {
             moveUp();
+            SNAKE.direction = DIRECTION.UP;
         } else if (event.key === "ArrowDown") {
             moveDown();
+            SNAKE.direction = DIRECTION.DOWN;
         }
     });
 
-    setInterval(function() {
+    setInterval(function () {
         elScore.innerHTML = SCORE.value;
         snakeCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
         drawLife();
@@ -227,8 +241,21 @@ function startGame() {
         drawHeart();
     }, REDRAW_INTERVAL);
 
-    setInterval(function() {
-        moveRight();
+    setInterval(function () {
+        switch (SNAKE.direction) {
+            case DIRECTION.LEFT:
+                moveLeft();
+                break;
+            case DIRECTION.RIGHT:
+                moveRight();
+                break;
+            case DIRECTION.DOWN:
+                moveDown();
+                break;
+            case DIRECTION.UP:
+                moveUp();
+                break;
+        }
     }, SNAKE_INTERVAL);
 }
 
@@ -255,7 +282,7 @@ const drawTitle = () => {
 function startMenu() {
     drawTitle();
 
-    document.addEventListener("keydown", function() {
+    document.addEventListener("keydown", function () {
         startGame();
     });
 }
