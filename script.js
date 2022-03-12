@@ -1,5 +1,5 @@
 //Press any key
-const CELL_SIZE = 30;
+const CELL_SIZE = 20;
 const SNAKE_COLOR = "orange";
 const CANVAR_SIZE = 600;
 
