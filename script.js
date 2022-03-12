@@ -1,105 +1,210 @@
-const CELL_SIZE = 20;
-const CANVAS_SIZE = 600;
-const REDRAW_INTERVAL = 100;
-const WIDTH = CANVAS_SIZE / CELL_SIZE;
-const HEIGHT = CANVAS_SIZE / CELL_SIZE;
+// ==========================================
+// SECTION: INITIALIZATION
+// ==========================================
 
-function initPosition() {
-    return {
-        x: Math.floor(Math.random() * WIDTH),
-        y: Math.floor(Math.random() * HEIGHT),
-    };
+let snakeCanvas = document.getElementById("snakeBoard");
+let lifeCanvas = document.getElementById("lifeBoard");
+let elScoreValue = document.getElementById("scoreValue");
+
+let snakeCtx = snakeCanvas.getContext("2d");
+let lifeCtx = lifeCanvas.getContext("2d");
+
+const CANVAS_SIZE = snakeCtx.canvas.width;
+const CELL_SIZE = 20;
+const SNAKE_COLOR = "orange";
+const REDRAW_INTERVAL = 20;
+
+// ==========================================
+// SECTION: HELPER FUNCTIONS
+// ==========================================
+
+function clearCanvas() {
+    snakeCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 }
 
-let snake = {
-    color: "orange",
-    position: initPosition(),
-};
-let apple1 = {
-    position: initPosition(),
-};
-let apple2 = {
-    position: initPosition(),
+function initPosition() {
+    return Math.floor(Math.random() * (CANVAS_SIZE / CELL_SIZE)) * CELL_SIZE;
+}
+
+// ==========================================
+// SECTION: OBJECTS
+// ==========================================
+
+const LIFE = {
+    count: 3,
+    position: {
+        x: 10,
+        y: 10,
+    },
 };
 
-function drawGambar(ctx, img, x, y) {
-    ctx.drawImage(img, x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+const APPLE = [
+    {
+        position: {
+            x: initPosition(),
+            y: initPosition(),
+        },
+    },
+    {
+        position: {
+            x: initPosition(),
+            y: initPosition(),
+        },
+    },
+];
+
+const SNAKE = {
+    color: SNAKE_COLOR,
+    position: {
+        x: initPosition(),
+        y: initPosition(),
+    },
+};
+
+// ==========================================
+// SECTION: GAMEPLAY
+// ==========================================
+
+function drawApple() {
+    let img = new Image();
+    img.src = "./assets/images/apple.png";
+
+    APPLE.forEach((apple) =>
+        snakeCtx.drawImage(
+            img,
+            apple.position.x,
+            apple.position.y,
+            CELL_SIZE,
+            CELL_SIZE
+        )
+    );
+}
+
+function drawLife() {
+    let img = new Image();
+    img.src = "/assets/images/heart-red.png";
+
+    for (let i = 0; i < LIFE.count; i++) {
+        const margin = i * 3;
+        lifeCtx.drawImage(
+            img,
+            LIFE.position.x + i * CELL_SIZE + margin,
+            LIFE.position.y,
+            CELL_SIZE,
+            CELL_SIZE
+        );
+    }
+}
+
+function drawSnake() {
+    snakeCtx.fillStyle = SNAKE_COLOR;
+    snakeCtx.fillRect(SNAKE.position.x, SNAKE.position.y, CELL_SIZE, CELL_SIZE);
 }
 
 function startGame() {
+    function eat() {
+        APPLE.forEach(function (apple, index) {
+            if (
+                SNAKE.position.x == apple.position.x &&
+                SNAKE.position.y == apple.position.y
+            ) {
+                APPLE[index].position.x = initPosition();
+                APPLE[index].position.y = initPosition();
+            }
+        });
+    }
+
+    function teleport() {
+        if (SNAKE.position.x < 0) {
+            SNAKE.position.x = CANVAS_SIZE - CELL_SIZE;
+        }
+        if (SNAKE.position.x >= CANVAS_SIZE) {
+            SNAKE.position.x = 0;
+        }
+        if (SNAKE.position.y < 0) {
+            SNAKE.position.y = CANVAS_SIZE - CELL_SIZE;
+        }
+        if (SNAKE.position.y >= CANVAS_SIZE) {
+            SNAKE.position.y = 0;
+        }
+    }
+
+    function moveLeft() {
+        SNAKE.position.x -= CELL_SIZE;
+        teleport();
+        eat();
+    }
+
+    function moveRight() {
+        SNAKE.position.x += CELL_SIZE;
+        teleport();
+        eat();
+    }
+
+    function moveDown() {
+        SNAKE.position.y += CELL_SIZE;
+        teleport();
+        eat();
+    }
+
+    function moveUp() {
+        SNAKE.position.y -= CELL_SIZE;
+        teleport();
+        eat();
+    }
+
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "ArrowLeft") {
+            moveLeft();
+        } else if (event.key === "ArrowRight") {
+            moveRight();
+        } else if (event.key === "ArrowUp") {
+            moveUp();
+        } else if (event.key === "ArrowDown") {
+            moveDown();
+        }
+    });
+
     setInterval(function () {
-        let snakeCanvas = document.getElementById("snakeBoard");
-        let ctx = snakeCanvas.getContext("2d");
-
-        ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-
-        drawCell(ctx, snake.position.x, snake.position.y, snake.color);
-        drawCell(ctx, snake.position.x, snake.position.y, snake.color);
-        drawCell(ctx, apple1.position.x, apple1.position.y);
-        drawCell(ctx, apple2.position.x, apple2.position.y);
+        snakeCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+        drawLife();
+        drawSnake();
+        drawApple();
     }, REDRAW_INTERVAL);
 }
 
-function teleport(snake) {
-    if (snake.position.x < 0) {
-        snake.position.x = CANVAS_SIZE / CELL_SIZE - 1;
-    }
-    if (snake.position.x >= WIDTH) {
-        snake.position.x = 0;
-    }
-    if (snake.position.y < 0) {
-        snake.position.y = CANVAS_SIZE / CELL_SIZE - 1;
-    }
-    if (snake.position.y >= HEIGHT) {
-        snake.position.y = 0;
-    }
+// ==========================================
+// SECTION: START MENU
+// ==========================================
+
+const drawTitle = () => {
+    snakeCtx.font = "24px Lalezar";
+    snakeCtx.textAlign = "center";
+    snakeCtx.fillText("START GAME", CANVAS_SIZE / 2, CANVAS_SIZE / 2);
+    snakeCtx.fillText("START GAME", CANVAS_SIZE / 2, CANVAS_SIZE / 2);
+    snakeCtx.fillText("START GAME", CANVAS_SIZE / 2, CANVAS_SIZE / 2);
+
+    snakeCtx.font = "18px Fredoka";
+    snakeCtx.textAlign = "center";
+    snakeCtx.fillText(
+        "-- Press any key to continue --",
+        CANVAS_SIZE / 2,
+        CANVAS_SIZE / 2 + 30
+    );
+};
+
+function startMenu() {
+    drawTitle();
+
+    document.addEventListener("keydown", function () {
+        startGame();
+    });
 }
 
-//this
-function eat(snake, apple1) {
-    //&&
-    if (
-        snake.position.x == apple1.position.x &&
-        snake.position.y == apple1.position.y
-    ) {
-        apple1.position = initPosition();
-    }
+// ==========================================
+// SECTION: INITIATION
+// ==========================================
+
+function initialize() {
+    startGame();
 }
-
-function moveLeft(snake) {
-    snake.position.x--;
-    teleport(snake);
-    eat(snake, apple1, apple2);
-}
-
-function moveRight(snake) {
-    snake.position.x++;
-    teleport(snake);
-    eat(snake, apple1, apple2);
-}
-
-function moveDown(snake) {
-    snake.position.y++;
-    teleport(snake);
-    eat(snake, apple1, apple2);
-}
-
-function moveUp(snake) {
-    snake.position.y--;
-    teleport(snake);
-    eat(snake, apple1, apple2);
-}
-
-document.addEventListener("keydown", function (event) {
-    if (event.key === "ArrowLeft") {
-        moveLeft(snake1);
-    } else if (event.key === "ArrowRight") {
-        moveRight(snake1);
-    } else if (event.key === "ArrowUp") {
-        moveUp(snake1);
-    } else if (event.key === "ArrowDown") {
-        moveDown(snake1);
-    }
-});
-
-startGame();
