@@ -1,4 +1,7 @@
-// ========================================== SECTION: INITIALIZATION
+// ==========================================
+// SECTION: INITIALIZATION
+// ==========================================
+
 let snakeCanvas = document.getElementById("snakeBoard");
 let lifeCanvas = document.getElementById("lifeBoard");
 
@@ -10,6 +13,10 @@ const CELL_SIZE = 20;
 const SNAKE_COLOR = "orange";
 const REDRAW_INTERVAL = 20;
 
+// ==========================================
+// SECTION: HELPER FUNCTIONS
+// ==========================================
+
 function clearCanvas() {
     snakeCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 }
@@ -17,6 +24,10 @@ function clearCanvas() {
 function initPosition() {
     return Math.floor(Math.random() * (CANVAS_SIZE / CELL_SIZE)) * CELL_SIZE;
 }
+
+// ==========================================
+// SECTION: OBJECTS
+// ==========================================
 
 const LIFE = {
     count: 3,
@@ -46,7 +57,10 @@ const SNAKE = {
     },
 };
 
-// ========================================== SECTION: GAMEPLAY
+// ==========================================
+// SECTION: GAMEPLAY
+// ==========================================
+
 function drawApple() {
     let img = new Image();
     img.src = "./assets/images/apple.png";
@@ -139,7 +153,10 @@ function startGame() {
     }, REDRAW_INTERVAL);
 }
 
-// ========================================== SECTION: START MENU
+// ==========================================
+// SECTION: START MENU
+// ==========================================
+
 const drawTitle = () => {
     snakeCtx.font = "24px Lalezar";
     snakeCtx.textAlign = "center";
@@ -164,7 +181,10 @@ function startMenu() {
     });
 }
 
-// ========================================== SECTION: INITIATION
+// ==========================================
+// SECTION: INITIATION
+// ==========================================
+
 function initialize() {
     startGame();
 }
