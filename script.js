@@ -4,6 +4,7 @@
 
 let snakeCanvas = document.getElementById("snakeBoard");
 let lifeCanvas = document.getElementById("lifeBoard");
+let elScoreValue = document.getElementById("scoreValue");
 
 let snakeCtx = snakeCanvas.getContext("2d");
 let lifeCtx = lifeCanvas.getContext("2d");
