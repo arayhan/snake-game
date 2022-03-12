@@ -1,46 +1,74 @@
 const CELL_SIZE = 20;
 const SNAKE_COLOR = "orange";
 const CANVAR_SIZE = 600;
+const REDRAW_INTERVAL = 100;
+const WIDTH = CANVAR_SIZE / CELL_SIZE;
+const HEIGHT = CANVAR_SIZE / CELL_SIZE;
 
-let snakeCanvas = document.getElementById("snakeBoard");
-let ctx = snakeCanvas.getContext("2d");
-
-ctx.canvas.width = CANVAR_SIZE;
-ctx.canvas.height = CANVAR_SIZE;
+let snakePositionX = Math.floor((Math.random() * CANVAR_SIZE) / CELL_SIZE);
+let snakePositionY = Math.floor((Math.random() * CANVAR_SIZE) / CELL_SIZE);
 
 function startGame() {
-    ctx.clearRect(0, 0, CANVAR_SIZE, CANVAR_SIZE);
-    ctx.fillStyle = SNAKE_COLOR;
-    ctx.fillRect(3 * CELL_SIZE, 5 * CELL_SIZE, CELL_SIZE, CELL_SIZE);
-}
+    setInterval(function () {
+        let snakeCanvas = document.getElementById("snakeBoard");
+        let ctx = snakeCanvas.getContext("2d");
 
-function startMenu() {
-    const drawTitle = () => {
-        ctx.font = "24px Lalezar";
-        ctx.textAlign = "center";
-        ctx.fillText("START GAME", CANVAR_SIZE / 2, CANVAR_SIZE / 2);
-    };
-
-    const drawSubTitle = () => {
-        ctx.font = "18px Fredoka";
-        ctx.textAlign = "center";
-        ctx.fillText(
-            "-- Press any key to continue --",
-            CANVAR_SIZE / 2,
-            CANVAR_SIZE / 2 + 28
+        ctx.clearRect(0, 0, CANVAR_SIZE, CANVAR_SIZE);
+        ctx.fillStyle = SNAKE_COLOR;
+        ctx.fillRect(
+            snakePositionX * CELL_SIZE,
+            snakePositionY * CELL_SIZE,
+            CELL_SIZE,
+            CELL_SIZE
         );
-    };
-
-    drawTitle();
-    drawSubTitle();
-
-    document.addEventListener(
-        "keydown",
-        () => {
-            startGame();
-        },
-        false
-    );
+    }, REDRAW_INTERVAL);
 }
 
-startMenu();
+function teleport() {
+    if (snakePositionX < 0) {
+        snakePositionX = CANVAR_SIZE / CELL_SIZE - 1;
+    }
+    if (snakePositionX >= WIDTH) {
+        snakePositionX = 0;
+    }
+    if (snakePositionY < 0) {
+        snakePositionY = CANVAR_SIZE / CELL_SIZE - 1;
+    }
+    if (snakePositionY >= HEIGHT) {
+        snakePositionY = 0;
+    }
+}
+
+function moveLeft() {
+    snakePositionX--;
+    teleport();
+}
+
+function moveRight() {
+    snakePositionX++;
+    teleport();
+}
+
+function moveDown() {
+    snakePositionY++;
+    teleport();
+}
+
+function moveUp() {
+    snakePositionY--;
+    teleport();
+}
+
+document.addEventListener("keydown", function (event) {
+    if (event.key === "ArrowLeft") {
+        moveLeft();
+    } else if (event.key === "ArrowRight") {
+        moveRight();
+    } else if (event.key === "ArrowUp") {
+        moveUp();
+    } else if (event.key === "ArrowDown") {
+        moveDown();
+    }
+});
+
+startGame();
