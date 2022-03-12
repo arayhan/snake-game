@@ -1,6 +1,8 @@
 :root {
     --primary: #1e90ff;
     --secondary: #129862;
+    --font-primary: "Fredoka", sans-serif;
+    --font-secondary: "Lalezar", cursive;
 }
 
 *,
@@ -9,10 +11,7 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
-}
-
-.font-primary {
-    font-family: "Lalezar", cursive;
+    font-family: var(--font-primary);
 }
 
 .board-container {
@@ -25,4 +24,5 @@
 .board-header {
     color: var(--primary);
     margin-bottom: 10px;
+    font-family: var(--font-secondary);
 }
