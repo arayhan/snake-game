@@ -46,6 +46,7 @@ const SNAKE = {
     },
 };
 
+// ========================================== SECTION: GAMEPLAY
 function drawApple() {
     let img = new Image();
     img.src = "./assets/images/apple.png";
