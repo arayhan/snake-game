@@ -11,10 +11,11 @@ let elLevel = document.getElementById("level");
 let snakeCtx = snakeCanvas.getContext("2d");
 let lifeCtx = lifeCanvas.getContext("2d");
 
+let snakeInterval;
+
 const CANVAS_SIZE = snakeCtx.canvas.width;
 const CELL_SIZE = 20;
 const REDRAW_INTERVAL = 20;
-const SNAKE_INTERVAL = 100;
 
 const DIRECTION = {
     LEFT: 0,
@@ -75,9 +76,11 @@ const GAME = {
 
 const LIFE = {
     value: 3,
-    position: {
-        x: 10,
-        y: 10,
+    container: {
+        position: {
+            x: 10,
+            y: 10,
+        },
     },
 };
 
@@ -105,7 +108,7 @@ const SNAKE = {
         },
     },
     direction: initDirection(),
-    speed: SNAKE_INTERVAL,
+    speed: 100,
 };
 
 const HEART = {
@@ -148,8 +151,8 @@ function drawLife() {
         const margin = i * 3;
         lifeCtx.drawImage(
             getImage("/assets/images/heart-red.png"),
-            LIFE.position.x + i * CELL_SIZE + margin,
-            LIFE.position.y,
+            LIFE.container.position.x + i * CELL_SIZE + margin,
+            LIFE.container.position.y,
             CELL_SIZE,
             CELL_SIZE
         );
@@ -177,6 +180,13 @@ function drawLevel() {
 // SECTION: GAMEPLAY
 // ==========================================
 
+function levelUp() {
+    GAME.level.value += 1;
+    SNAKE.speed -= 20;
+    clearInterval(snakeInterval);
+    snakeInterval = setInterval(() => move(SNAKE.direction), SNAKE.speed);
+}
+
 function eatApple() {
     APPLE.forEach(function (apple, index) {
         if (SNAKE.head.position.x == apple.position.x && SNAKE.head.position.y == apple.position.y) {
@@ -187,8 +197,7 @@ function eatApple() {
             }
 
             if (GAME.score.value % 5 === 0) {
-                GAME.level.value += 1;
-                SNAKE.speed -= 20;
+                levelUp();
             }
 
             playSound("./assets/audio/eat.mp3");
@@ -258,7 +267,7 @@ function startGame() {
         drawHeart();
     }, REDRAW_INTERVAL);
 
-    setInterval(() => move(SNAKE.direction), SNAKE_INTERVAL);
+    snakeInterval = setInterval(() => move(SNAKE.direction), SNAKE.speed);
 
     document.addEventListener("keydown", function (event) {
         if (event.key === "ArrowLeft" && SNAKE.direction !== DIRECTION.LEFT) {
