@@ -194,6 +194,9 @@ function initHeadBody() {
 // ==========================================
 // SECTION: DRAW FUNCTIONS
 // ==========================================
+
+function isSpriteOverlapping(sprite) {}
+
 function drawApple() {
     APPLE.forEach((apple) =>
         snakeCtx.drawImage(getImage(APPLE_SPRITE), apple.position.x, apple.position.y, CELL_SIZE, CELL_SIZE)
@@ -274,6 +277,7 @@ function levelUp() {
     if (GAME.level.value === 3) LIFE.value += 3;
     if (GAME.level.value > 5) winTheGame();
 
+    // re-adjust speed
     SNAKE.speed = LEVEL[GAME.level.value].speed;
     clearInterval(snakeInterval);
     snakeInterval = setInterval(() => move(SNAKE.direction), SNAKE.speed);
@@ -294,6 +298,7 @@ function hitTheWall() {
             SNAKE.body = [SNAKE.head];
 
             GAME.level.value = 1;
+            SNAKE.speed = LEVEL[GAME.level.value].speed;
 
             if (LIFE.value < 0) {
                 gameOver();
