@@ -156,7 +156,7 @@ function startGame() {
 
     function eatHeart() {
         let life = new Audio();
-        life.src = "./assets/sounds/life.wav";
+        life.src = "./assets/audio/life.wav";
 
         if (
             SNAKE.position.x == HEART.position.x &&
