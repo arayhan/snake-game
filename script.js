@@ -84,8 +84,7 @@ const LIFE = {
     },
 };
 
-const APPLE = [
-    {
+const APPLE = [{
         position: {
             x: initPosition(),
             y: initPosition(),
@@ -107,14 +106,12 @@ function initHeadBody() {
         },
     };
 
-    const body = [
-        {
-            position: {
-                x: head.position.x,
-                y: head.position.y,
-            },
+    const body = [{
+        position: {
+            x: head.position.x,
+            y: head.position.y,
         },
-    ];
+    }, ];
 
     return {
         head: head,
@@ -220,7 +217,7 @@ function levelUp() {
 }
 
 function eatApple() {
-    APPLE.forEach(function (apple, index) {
+    APPLE.forEach(function(apple, index) {
         if (SNAKE.head.position.x == apple.position.x && SNAKE.head.position.y == apple.position.y) {
             GAME.score.value += 1;
 
@@ -297,7 +294,7 @@ function moveBody() {
 }
 
 function startGame() {
-    setInterval(function () {
+    setInterval(function() {
         clearCanvas();
         // drawMap();
         drawScore();
@@ -311,21 +308,27 @@ function startGame() {
 
     snakeInterval = setInterval(() => move(SNAKE.direction), SNAKE.speed);
 
-    document.addEventListener("keydown", function (event) {
+    document.addEventListener("keydown", function(event) {
         if (event.key === "ArrowLeft") {
             if (SNAKE.direction !== DIRECTION.RIGHT) {
                 if (SNAKE.direction !== DIRECTION.LEFT) playSound("./assets/audio/left.mp3");
                 move(DIRECTION.LEFT);
             }
         } else if (event.key === "ArrowRight") {
-            if (SNAKE.direction !== DIRECTION.RIGHT) playSound("./assets/audio/right.mp3");
-            move(DIRECTION.RIGHT);
+            if (SNAKE.direction !== DIRECTION.LEFT) {
+                if (SNAKE.direction !== DIRECTION.RIGHT) playSound("./assets/audio/right.mp3");
+                move(DIRECTION.RIGHT);
+            }
         } else if (event.key === "ArrowUp") {
-            if (SNAKE.direction !== DIRECTION.UP) playSound("./assets/audio/up.mp3");
-            move(DIRECTION.UP);
+            if (SNAKE.direction !== DIRECTION.DOWN) {
+                if (SNAKE.direction !== DIRECTION.UP) playSound("./assets/audio/down.mp3");
+                move(DIRECTION.UP);
+            }
         } else if (event.key === "ArrowDown") {
-            if (SNAKE.direction !== DIRECTION.DOWN) playSound("./assets/audio/down.mp3");
-            move(DIRECTION.DOWN);
+            if (SNAKE.direction !== DIRECTION.UP) {
+                if (SNAKE.direction !== DIRECTION.DOWN) playSound("./assets/audio/down.mp3");
+                move(DIRECTION.DOWN);
+            }
         }
     });
 }
