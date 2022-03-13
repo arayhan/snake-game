@@ -114,36 +114,6 @@ function initHeadBody() {
                 y: head.position.y,
             },
         },
-        {
-            position: {
-                x: head.position.x,
-                y: head.position.y,
-            },
-        },
-        {
-            position: {
-                x: head.position.x,
-                y: head.position.y,
-            },
-        },
-        {
-            position: {
-                x: head.position.x,
-                y: head.position.y,
-            },
-        },
-        {
-            position: {
-                x: head.position.x,
-                y: head.position.y,
-            },
-        },
-        {
-            position: {
-                x: head.position.x,
-                y: head.position.y,
-            },
-        },
     ];
 
     return {
@@ -211,7 +181,7 @@ function drawSnake() {
     snakeCtx.fillStyle = SNAKE.color;
     snakeCtx.fillRect(SNAKE.head.position.x, SNAKE.head.position.y, CELL_SIZE, CELL_SIZE);
 
-    SNAKE.body.forEach((body, index) => {
+    SNAKE.body.forEach((body) => {
         const x = body.position.x;
         snakeCtx.fillRect(x, body.position.y, CELL_SIZE, CELL_SIZE);
     });
@@ -257,6 +227,8 @@ function eatApple() {
 
             APPLE[index].position.x = initPosition();
             APPLE[index].position.y = initPosition();
+
+            SNAKE.body.push({ position: { x: SNAKE.head.position.x, y: SNAKE.head.position.y } });
         }
     });
 }
