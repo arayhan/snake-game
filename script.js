@@ -299,7 +299,7 @@ function moveBody() {
 function startGame() {
     setInterval(function () {
         clearCanvas();
-        // drawMap();
+        drawMap();
         drawScore();
         drawSpeed();
         drawLevel();
