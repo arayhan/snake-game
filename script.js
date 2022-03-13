@@ -313,8 +313,10 @@ function startGame() {
 
     document.addEventListener("keydown", function (event) {
         if (event.key === "ArrowLeft") {
-            if (SNAKE.direction !== DIRECTION.LEFT) playSound("./assets/audio/left.mp3");
-            move(DIRECTION.LEFT);
+            if (SNAKE.direction !== DIRECTION.RIGHT) {
+                if (SNAKE.direction !== DIRECTION.LEFT) playSound("./assets/audio/left.mp3");
+                move(DIRECTION.LEFT);
+            }
         } else if (event.key === "ArrowRight") {
             if (SNAKE.direction !== DIRECTION.RIGHT) playSound("./assets/audio/right.mp3");
             move(DIRECTION.RIGHT);
