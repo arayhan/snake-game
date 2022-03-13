@@ -291,6 +291,8 @@ function hitTheWall() {
                 y: initPosition(),
             };
 
+            SNAKE.body = [SNAKE.head];
+
             GAME.level.value = 1;
 
             if (LIFE.value < 0) {
