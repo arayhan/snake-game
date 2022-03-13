@@ -5,6 +5,7 @@
 let snakeCanvas = document.getElementById("snakeBoard");
 let lifeCanvas = document.getElementById("lifeBoard");
 let elScore = document.getElementById("score");
+let elSpeed = document.getElementById("speed");
 
 let snakeCtx = snakeCanvas.getContext("2d");
 let lifeCtx = lifeCanvas.getContext("2d");
@@ -13,7 +14,9 @@ const CANVAS_SIZE = snakeCtx.canvas.width;
 const CELL_SIZE = 20;
 const SNAKE_COLOR = "orange";
 const REDRAW_INTERVAL = 20;
-const SNAKE_INTERVAL = 80;
+
+const SNAKE_INTERVAL = 140;
+
 const DIRECTION = {
     LEFT: 0,
     RIGHT: 1,
@@ -54,6 +57,10 @@ const SCORE = {
     value: 0,
 };
 
+const SPEED = {
+    value: 140,
+};
+
 const LIFE = {
     count: 3,
     position: {
@@ -85,6 +92,7 @@ const SNAKE = {
         y: initPosition(),
         direction: initDirection(),
     },
+    speed: 140,
 };
 
 // ==========================================
@@ -136,20 +144,24 @@ function startGame() {
                 SNAKE.position.x == apple.position.x &&
                 SNAKE.position.y == apple.position.y
             ) {
-                SCORE.value += 1;
                 eat.play();
                 APPLE[index].position.x = initPosition();
                 APPLE[index].position.y = initPosition();
                 SNAKE.body.push({ x: SNAKE.head.x, y: SNAKE.head.y });
+                SCORE.value += 1;
+                if (SCORE.value == 5) {
+                    SPEED.value -= 20;
+                } else if (SCORE.value == 10) {
+                    SPEED.value -= 20;
+                } else if (SCORE.value == 15) {
+                    SPEED.value -= 20;
+                } else if (SCORE.value == 20) {
+                    SPEED.value -= 20;
+                } else if (SCORE.value == 25) {
+                    SPEED.value -= 20;
+                }
             }
         });
-    }
-
-    function drawBody() {
-        drawBody(snakeCtx, SNAKE.head.x, SNAKE.head.y, SNAKE.color);
-        for (let i = 1; i < SNAKE.body.length; i++) {
-            drawBody(snakeCtx, SNAKE.body[i].x, SNAKE.body[i].y, SNAKE.color);
-        }
     }
 
     function teleport() {
@@ -225,11 +237,12 @@ function startGame() {
 
     setInterval(function () {
         elScore.innerHTML = SCORE.value;
+        elSpeed.innerHTML = SPEED.value;
+        // elSpeed.innerHTML = snake.speed;
         snakeCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
         drawLife();
         drawSnake();
         drawApple();
-        drawBody();
     }, REDRAW_INTERVAL);
 
     setInterval(function () {
@@ -247,7 +260,7 @@ function startGame() {
                 moveUp();
                 break;
         }
-    }, SNAKE_INTERVAL);
+    }, SPEED.value);
 }
 
 function moveBody() {

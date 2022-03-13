@@ -38,3 +38,16 @@
     font-size: 2em;
     font-family: var(--font-secondary);
 }
+
+.snake-speed {
+    margin-top: -300px;
+    margin-left: 800px;
+    border: 1px solid black;
+    width: 150px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+    font-family: var(--font-secondary);
+}
