@@ -178,13 +178,17 @@ function drawLife() {
 }
 
 function drawSnake() {
-    snakeCtx.fillStyle = SNAKE.color;
-    snakeCtx.fillRect(SNAKE.head.position.x, SNAKE.head.position.y, CELL_SIZE, CELL_SIZE);
-
     SNAKE.body.forEach((body, index) => {
-        const x = body.position.x;
-        if (index > 0) snakeCtx.fillRect(x, body.position.y, CELL_SIZE, CELL_SIZE);
+        snakeCtx.fillStyle = SNAKE.color;
+        if (index > 0) snakeCtx.fillRect(body.position.x, body.position.y, CELL_SIZE, CELL_SIZE);
     });
+    snakeCtx.drawImage(
+        getImage("/assets/images/kepala.png"),
+        SNAKE.head.position.x,
+        SNAKE.head.position.y,
+        CELL_SIZE,
+        CELL_SIZE
+    );
 }
 
 function drawScore() {
