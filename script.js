@@ -14,7 +14,7 @@ let lifeCtx = lifeCanvas.getContext("2d");
 let snakeInterval;
 
 const CANVAS_SIZE = snakeCtx.canvas.width;
-const CELL_SIZE = CANVAS_SIZE / 30;
+const CELL_SIZE = CANVAS_SIZE / 20;
 const REDRAW_INTERVAL = 20;
 
 const DIRECTION = {
@@ -298,7 +298,7 @@ function moveBody() {
 function startGame() {
     setInterval(function () {
         clearCanvas();
-        drawMap();
+        // drawMap();
         drawScore();
         drawSpeed();
         drawLevel();
