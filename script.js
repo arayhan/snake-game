@@ -54,20 +54,23 @@ function playSound(src) {
     audio.play();
 }
 
+function getImage(src) {
+    let img = new Image();
+    img.src = src;
+    return img;
+}
+
 // ==========================================
 // SECTION: OBJECTS
 // ==========================================
 
-const SCORE = {
-    value: 0,
-};
-
-const SPEED = {
-    value: 140,
-};
-
-const LEVEL = {
-    value: 0,
+const GAME = {
+    score: {
+        value: 0,
+    },
+    level: {
+        value: 0,
+    },
 };
 
 const LIFE = {
@@ -102,6 +105,7 @@ const SNAKE = {
         },
     },
     direction: initDirection(),
+    speed: SNAKE_INTERVAL,
 };
 
 const HEART = {
@@ -116,28 +120,39 @@ const HEART = {
 // SECTION: DRAW FUNCTIONS
 // ==========================================
 function drawApple() {
-    let img = new Image();
-    img.src = "./assets/images/apple.png";
-
-    APPLE.forEach((apple) => snakeCtx.drawImage(img, apple.position.x, apple.position.y, CELL_SIZE, CELL_SIZE));
+    APPLE.forEach((apple) =>
+        snakeCtx.drawImage(
+            getImage("./assets/images/apple.png"),
+            apple.position.x,
+            apple.position.y,
+            CELL_SIZE,
+            CELL_SIZE
+        )
+    );
 }
 
 function drawHeart() {
-    let img = new Image();
-    img.src = "/assets/images/heart.gif";
-
     if (HEART.show) {
-        snakeCtx.drawImage(img, HEART.position.x, HEART.position.y, CELL_SIZE, CELL_SIZE);
+        snakeCtx.drawImage(
+            getImage("/assets/images/heart.gif"),
+            HEART.position.x,
+            HEART.position.y,
+            CELL_SIZE,
+            CELL_SIZE
+        );
     }
 }
 
 function drawLife() {
-    let img = new Image();
-    img.src = "/assets/images/heart-red.png";
-
     for (let i = 0; i < LIFE.value; i++) {
         const margin = i * 3;
-        lifeCtx.drawImage(img, LIFE.position.x + i * CELL_SIZE + margin, LIFE.position.y, CELL_SIZE, CELL_SIZE);
+        lifeCtx.drawImage(
+            getImage("/assets/images/heart-red.png"),
+            LIFE.position.x + i * CELL_SIZE + margin,
+            LIFE.position.y,
+            CELL_SIZE,
+            CELL_SIZE
+        );
     }
 }
 
@@ -147,15 +162,15 @@ function drawSnake() {
 }
 
 function drawScore() {
-    elScore.innerHTML = SCORE.value;
+    elScore.innerHTML = GAME.score.value;
 }
 
 function drawSpeed() {
-    elSpeed.innerHTML = SPEED.value;
+    elSpeed.innerHTML = SNAKE.speed / 1000 + "ms";
 }
 
 function drawLevel() {
-    elLevel.innerHTML = LEVEL.value;
+    elLevel.innerHTML = GAME.level.value;
 }
 
 // ==========================================
@@ -165,15 +180,15 @@ function drawLevel() {
 function eatApple() {
     APPLE.forEach(function (apple, index) {
         if (SNAKE.head.position.x == apple.position.x && SNAKE.head.position.y == apple.position.y) {
-            SCORE.value += 1;
+            GAME.score.value += 1;
 
-            if (SCORE.value > 2 && isPrimeNumber(SCORE.value)) {
+            if (GAME.score.value > 2 && isPrimeNumber(GAME.score.value)) {
                 HEART.show = true;
             }
 
-            if (SCORE.value % 5 === 0) {
-                LEVEL.value += 1;
-                SPEED.value -= 20;
+            if (GAME.score.value % 5 === 0) {
+                GAME.level.value += 1;
+                SNAKE.speed -= 20;
             }
 
             playSound("./assets/audio/eat.mp3");
