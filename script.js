@@ -212,6 +212,7 @@ function drawMap() {
 // ==========================================
 
 function levelUp() {
+    playSound("./assets/audio/nextlevel.mp3");
     GAME.level.value += 1;
     SNAKE.speed -= 20;
     clearInterval(snakeInterval);
