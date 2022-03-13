@@ -365,8 +365,11 @@ function drawMap() {
 // ==========================================
 
 function winTheGame() {
-    alert("CONGRATULATIONS, YOU WIN THE GAME!");
-    window.location.reload();
+    playSound("./assets/audio/winning.wav");
+    setTimeout(() => {
+        alert("CONGRATULATIONS, YOU WIN THE GAME!");
+        window.location.reload();
+    }, 100);
 }
 
 function gameOver() {
