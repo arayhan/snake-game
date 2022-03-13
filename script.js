@@ -37,6 +37,17 @@ function initDirection() {
     return Math.floor(Math.random() * 4);
 }
 
+function isPrimeNumber(num) {
+    var x = 0;
+    for (var i = 2; i <= Math.floor(num / 2); i++) {
+        x++;
+        if (num % i === 0) {
+            return false;
+        }
+    }
+    return true;
+}
+
 // ==========================================
 // SECTION: OBJECTS
 // ==========================================
@@ -78,6 +89,7 @@ const SNAKE = {
 };
 
 const HEART = {
+    show: false,
     position: {
         x: initPosition(),
         y: initPosition(),
@@ -105,15 +117,19 @@ function drawApple() {
 
 function drawHeart() {
     let img = new Image();
-    img.src = "/assets/images/heart-red.png";
+    img.src = "/assets/images/heart.gif";
 
-    snakeCtx.drawImage(
-        img,
-        HEART.position.x,
-        HEART.position.y,
-        CELL_SIZE,
-        CELL_SIZE
-    );
+    if (HEART.show) {
+        snakeCtx.drawImage(
+            img,
+            HEART.position.x,
+            HEART.position.y,
+            CELL_SIZE,
+            CELL_SIZE
+        );
+
+        setTimeout();
+    }
 }
 
 function drawLife() {
@@ -147,6 +163,11 @@ function startGame() {
                 SNAKE.position.y == apple.position.y
             ) {
                 SCORE.value += 1;
+
+                if (SCORE.value > 2 && isPrimeNumber(SCORE.value)) {
+                    HEART.show = true;
+                }
+
                 eat.play();
                 APPLE[index].position.x = initPosition();
                 APPLE[index].position.y = initPosition();
@@ -163,6 +184,7 @@ function startGame() {
             SNAKE.position.y == HEART.position.y
         ) {
             LIFE.value += 1;
+            HEART.show = false;
             life.play();
             HEART.position.x = initPosition();
             HEART.position.y = initPosition();
