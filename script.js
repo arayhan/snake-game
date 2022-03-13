@@ -16,6 +16,12 @@ let snakeInterval;
 const CANVAS_SIZE = snakeCtx.canvas.width;
 const CELL_SIZE = CANVAS_SIZE / 20;
 const REDRAW_INTERVAL = 20;
+const MAP_SPRITE = "./assets/images/ground.png";
+const APPLE_SPRITE = "./assets/images/apple.png";
+const HEART_SPRITE = "./assets/images/heart.gif";
+const LIFE_SPRITE = "./assets/images/heart-red.png";
+const HEAD_SPRITE = "./assets/images/kepala.png";
+const BODY_SPRITE = "./assets/images/badan.png";
 
 const DIRECTION = {
     LEFT: 0,
@@ -142,25 +148,13 @@ const HEART = {
 // ==========================================
 function drawApple() {
     APPLE.forEach((apple) =>
-        snakeCtx.drawImage(
-            getImage("./assets/images/apple.png"),
-            apple.position.x,
-            apple.position.y,
-            CELL_SIZE,
-            CELL_SIZE
-        )
+        snakeCtx.drawImage(getImage(APPLE_SPRITE), apple.position.x, apple.position.y, CELL_SIZE, CELL_SIZE)
     );
 }
 
 function drawHeart() {
     if (HEART.show) {
-        snakeCtx.drawImage(
-            getImage("/assets/images/heart.gif"),
-            HEART.position.x,
-            HEART.position.y,
-            CELL_SIZE,
-            CELL_SIZE
-        );
+        snakeCtx.drawImage(getImage(HEART_SPRITE), HEART.position.x, HEART.position.y, CELL_SIZE, CELL_SIZE);
     }
 }
 
@@ -168,7 +162,7 @@ function drawLife() {
     for (let i = 0; i < LIFE.value; i++) {
         const margin = i * 3;
         lifeCtx.drawImage(
-            getImage("/assets/images/heart-red.png"),
+            getImage(LIFE_SPRITE),
             LIFE.container.position.x + i * CELL_SIZE + margin,
             LIFE.container.position.y,
             CELL_SIZE,
@@ -179,16 +173,11 @@ function drawLife() {
 
 function drawSnake() {
     SNAKE.body.forEach((body, index) => {
-        snakeCtx.fillStyle = SNAKE.color;
-        if (index > 0) snakeCtx.fillRect(body.position.x, body.position.y, CELL_SIZE, CELL_SIZE);
+        if (index > 0) {
+            snakeCtx.drawImage(getImage(BODY_SPRITE), body.position.x, body.position.y, CELL_SIZE, CELL_SIZE);
+        }
     });
-    snakeCtx.drawImage(
-        getImage("/assets/images/kepala.png"),
-        SNAKE.head.position.x,
-        SNAKE.head.position.y,
-        CELL_SIZE,
-        CELL_SIZE
-    );
+    snakeCtx.drawImage(getImage(HEAD_SPRITE), SNAKE.head.position.x, SNAKE.head.position.y, CELL_SIZE, CELL_SIZE);
 }
 
 function drawScore() {
@@ -237,7 +226,13 @@ function eatApple() {
             APPLE[index].position.x = initPosition();
             APPLE[index].position.y = initPosition();
 
-            SNAKE.body.push({ position: { x: SNAKE.head.position.x, y: SNAKE.head.position.y } });
+            SNAKE.body.push({
+                sprite: BODY_SPRITE,
+                position: {
+                    x: SNAKE.head.position.x,
+                    y: SNAKE.head.position.y,
+                },
+            });
         }
     });
 }
