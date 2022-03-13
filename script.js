@@ -37,6 +37,15 @@ function initDirection() {
     return Math.floor(Math.random() * 4);
 }
 
+function initHeadAndBody() {
+    let head = initPosition();
+    let body = [{ x: head.x, y: head.y }];
+    return {
+        head: head,
+        body: body,
+    };
+}
+
 // ==========================================
 // SECTION: OBJECTS
 // ==========================================
@@ -70,11 +79,12 @@ const APPLE = [
 
 const SNAKE = {
     color: SNAKE_COLOR,
+    ...initHeadAndBody(),
     position: {
         x: initPosition(),
         y: initPosition(),
+        direction: initDirection(),
     },
-    direction: initDirection(),
 };
 
 // ==========================================
@@ -130,8 +140,16 @@ function startGame() {
                 eat.play();
                 APPLE[index].position.x = initPosition();
                 APPLE[index].position.y = initPosition();
+                SNAKE.body.push({ x: SNAKE.head.x, y: SNAKE.head.y });
             }
         });
+    }
+
+    function drawBody() {
+        drawBody(snakeCtx, SNAKE.head.x, SNAKE.head.y, SNAKE.color);
+        for (let i = 1; i < SNAKE.body.length; i++) {
+            drawBody(snakeCtx, SNAKE.body[i].x, SNAKE.body[i].y, SNAKE.color);
+        }
     }
 
     function teleport() {
@@ -211,6 +229,7 @@ function startGame() {
         drawLife();
         drawSnake();
         drawApple();
+        drawBody();
     }, REDRAW_INTERVAL);
 
     setInterval(function () {
@@ -229,6 +248,11 @@ function startGame() {
                 break;
         }
     }, SNAKE_INTERVAL);
+}
+
+function moveBody() {
+    SNAKE.body.unshift({ x: SNAKE.head.x, y: SNAKE.head.y });
+    SNAKE.body.pop();
 }
 
 // ==========================================
