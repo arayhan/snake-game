@@ -64,3 +64,10 @@
     font-size: 2em;
     font-family: var(--font-secondary);
 }
+
+.board-level h5 {
+    margin-top: -90px;
+    color: var(--primary);
+    align-items: center;
+    justify-content: center;
+}
