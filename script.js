@@ -99,16 +99,64 @@ const APPLE = [
     },
 ];
 
-const SNAKE = {
-    color: "orange",
-    head: {
+function initHeadBody() {
+    const head = {
         position: {
             x: initPosition(),
             y: initPosition(),
         },
-    },
+    };
+
+    const body = [
+        {
+            position: {
+                x: head.position.x,
+                y: head.position.y,
+            },
+        },
+        {
+            position: {
+                x: head.position.x,
+                y: head.position.y,
+            },
+        },
+        {
+            position: {
+                x: head.position.x,
+                y: head.position.y,
+            },
+        },
+        {
+            position: {
+                x: head.position.x,
+                y: head.position.y,
+            },
+        },
+        {
+            position: {
+                x: head.position.x,
+                y: head.position.y,
+            },
+        },
+        {
+            position: {
+                x: head.position.x,
+                y: head.position.y,
+            },
+        },
+    ];
+
+    return {
+        head: head,
+        body: body,
+    };
+}
+
+const SNAKE = {
+    color: "orange",
     direction: initDirection(),
     speed: 100,
+    ...initHeadBody(),
 };
 
 const HEART = {
@@ -162,6 +210,11 @@ function drawLife() {
 function drawSnake() {
     snakeCtx.fillStyle = SNAKE.color;
     snakeCtx.fillRect(SNAKE.head.position.x, SNAKE.head.position.y, CELL_SIZE, CELL_SIZE);
+
+    SNAKE.body.forEach((body, index) => {
+        const x = body.position.x;
+        snakeCtx.fillRect(x, body.position.y, CELL_SIZE, CELL_SIZE);
+    });
 }
 
 function drawScore() {
@@ -253,6 +306,13 @@ function move(direction) {
             SNAKE.head.position.y -= CELL_SIZE;
             break;
     }
+
+    moveBody();
+}
+
+function moveBody() {
+    SNAKE.body.unshift({ position: { x: SNAKE.head.position.x, y: SNAKE.head.position.y } });
+    SNAKE.body.pop();
 }
 
 function startGame() {
@@ -270,17 +330,17 @@ function startGame() {
     snakeInterval = setInterval(() => move(SNAKE.direction), SNAKE.speed);
 
     document.addEventListener("keydown", function (event) {
-        if (event.key === "ArrowLeft" && SNAKE.direction !== DIRECTION.LEFT) {
-            playSound("./assets/audio/left.mp3");
+        if (event.key === "ArrowLeft") {
+            if (SNAKE.direction !== DIRECTION.LEFT) playSound("./assets/audio/left.mp3");
             move(DIRECTION.LEFT);
-        } else if (event.key === "ArrowRight" && SNAKE.direction !== DIRECTION.RIGHT) {
-            playSound("./assets/audio/right.mp3");
+        } else if (event.key === "ArrowRight") {
+            if (SNAKE.direction !== DIRECTION.RIGHT) playSound("./assets/audio/right.mp3");
             move(DIRECTION.RIGHT);
-        } else if (event.key === "ArrowUp" && SNAKE.direction !== DIRECTION.UP) {
-            playSound("./assets/audio/up.mp3");
+        } else if (event.key === "ArrowUp") {
+            if (SNAKE.direction !== DIRECTION.UP) playSound("./assets/audio/up.mp3");
             move(DIRECTION.UP);
-        } else if (event.key === "ArrowDown" && SNAKE.direction !== DIRECTION.DOWN) {
-            playSound("./assets/audio/down.mp3");
+        } else if (event.key === "ArrowDown") {
+            if (SNAKE.direction !== DIRECTION.DOWN) playSound("./assets/audio/down.mp3");
             move(DIRECTION.DOWN);
         }
     });
