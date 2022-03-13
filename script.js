@@ -94,8 +94,8 @@ const SNAKE = {
     position: {
         x: initPosition(),
         y: initPosition(),
-        direction: initDirection(),
     },
+    direction: initDirection(),
 };
 
 const HEART = {
@@ -137,8 +137,6 @@ function drawHeart() {
             CELL_SIZE,
             CELL_SIZE
         );
-
-        setTimeout();
     }
 }
 
@@ -201,8 +199,11 @@ function startGame() {
             SNAKE.position.x == HEART.position.x &&
             SNAKE.position.y == HEART.position.y
         ) {
-            LIFE.value += 1;
-            HEART.show = false;
+            if (HEART.show) {
+                LIFE.value += 1;
+                HEART.show = false;
+            }
+
             life.play();
             HEART.position.x = initPosition();
             HEART.position.y = initPosition();
