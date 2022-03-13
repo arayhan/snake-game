@@ -81,8 +81,24 @@ const GAME = {
     },
 };
 
+const SNAKE = {
+    color: "orange",
+    direction: initDirection(),
+    speed: 100,
+    ...initHeadBody(),
+};
+
+const HEART = {
+    show: false,
+    position: {
+        x: initPosition(),
+        y: initPosition(),
+    },
+};
+
 const LEVEL = {
     1: {
+        speed: SNAKE.speed - 10,
         obstacles: [
             { x: 0 * CELL_SIZE, y: 6 * CELL_SIZE },
             { x: 1 * CELL_SIZE, y: 6 * CELL_SIZE },
@@ -96,6 +112,7 @@ const LEVEL = {
         ],
     },
     2: {
+        speed: SNAKE.speed - 15,
         obstacles: [
             { x: 3 * CELL_SIZE, y: 6 * CELL_SIZE },
             { x: 5 * CELL_SIZE, y: 2 * CELL_SIZE },
@@ -104,6 +121,7 @@ const LEVEL = {
         ],
     },
     3: {
+        speed: SNAKE.speed - 20,
         obstacles: [
             { x: 3 * CELL_SIZE, y: 20 * CELL_SIZE },
             { x: 6 * CELL_SIZE, y: 11 * CELL_SIZE },
@@ -112,9 +130,11 @@ const LEVEL = {
         ],
     },
     4: {
+        speed: SNAKE.speed - 35,
         obstacles: [{ x: 4 * CELL_SIZE, y: 10 * CELL_SIZE }],
     },
     5: {
+        speed: SNAKE.speed - 50,
         obstacles: [{ x: 7 * CELL_SIZE, y: 11 * CELL_SIZE }],
     },
 };
@@ -167,21 +187,6 @@ function initHeadBody() {
     };
 }
 
-const SNAKE = {
-    color: "orange",
-    direction: initDirection(),
-    speed: 100,
-    ...initHeadBody(),
-};
-
-const HEART = {
-    show: false,
-    position: {
-        x: initPosition(),
-        y: initPosition(),
-    },
-};
-
 // ==========================================
 // SECTION: DRAW FUNCTIONS
 // ==========================================
@@ -230,7 +235,7 @@ function drawScore() {
 }
 
 function drawSpeed() {
-    elSpeed.innerHTML = SNAKE.speed / 1000 + "ms";
+    elSpeed.innerHTML = SNAKE.speed + "ms";
 }
 
 function drawLevel() {
@@ -248,7 +253,7 @@ function drawMap() {
 function levelUp() {
     playSound("./assets/audio/nextlevel.mp3");
     GAME.level.value += 1;
-    SNAKE.speed -= 20;
+    SNAKE.speed = LEVEL[GAME.level.value].speed;
     clearInterval(snakeInterval);
     snakeInterval = setInterval(() => move(SNAKE.direction), SNAKE.speed);
 }
