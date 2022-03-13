@@ -14,7 +14,7 @@ let lifeCtx = lifeCanvas.getContext("2d");
 let snakeInterval;
 
 const CANVAS_SIZE = snakeCtx.canvas.width;
-const CELL_SIZE = 20;
+const CELL_SIZE = CANVAS_SIZE / 30;
 const REDRAW_INTERVAL = 20;
 
 const DIRECTION = {
@@ -245,13 +245,13 @@ function eatHeart() {
 
 function teleport() {
     if (SNAKE.head.position.x < 0) {
-        SNAKE.head.position.x = CANVAS_SIZE - CELL_SIZE;
+        SNAKE.head.position.x = CANVAS_SIZE;
     } else if (SNAKE.head.position.x >= CANVAS_SIZE) {
-        SNAKE.head.position.x = 0;
+        SNAKE.head.position.x = 0 - CELL_SIZE;
     } else if (SNAKE.head.position.y < 0) {
-        SNAKE.head.position.y = CANVAS_SIZE - CELL_SIZE;
+        SNAKE.head.position.y = CANVAS_SIZE;
     } else if (SNAKE.head.position.y >= CANVAS_SIZE) {
-        SNAKE.head.position.y = 0;
+        SNAKE.head.position.y = 0 - CELL_SIZE;
     }
 }
 
