@@ -13,7 +13,6 @@ let lifeCtx = lifeCanvas.getContext("2d");
 
 const CANVAS_SIZE = snakeCtx.canvas.width;
 const CELL_SIZE = 20;
-const SNAKE_COLOR = "orange";
 const REDRAW_INTERVAL = 20;
 
 const SNAKE_INTERVAL = 140;
@@ -33,6 +32,21 @@ function clearCanvas() {
     snakeCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 }
 
+function isPrimeNumber(num) {
+    var x = 0;
+    for (var i = 2; i <= Math.floor(num / 2); i++) {
+        x++;
+        if (num % i === 0) {
+            return false;
+        }
+    }
+    return true;
+}
+
+// ==========================================
+// SECTION: OBJECTS
+// ==========================================
+
 function initPosition() {
     return Math.floor(Math.random() * (CANVAS_SIZE / CELL_SIZE)) * CELL_SIZE;
 }
@@ -41,7 +55,7 @@ function initDirection() {
     return Math.floor(Math.random() * 4);
 }
 
-function initHeadAndBody() {
+function initHeadBodyAndTail() {
     let head = initPosition();
     let body = [{ x: head.x, y: head.y }];
     return {
@@ -50,9 +64,16 @@ function initHeadAndBody() {
     };
 }
 
-// ==========================================
-// SECTION: OBJECTS
-// ==========================================
+function initSnake(color) {
+    return {
+        color: color,
+        position: {
+            x: initPosition(),
+            y: initPosition(),
+        },
+        direction: initDirection(),
+    };
+}
 
 const SCORE = {
     value: 0,
@@ -67,7 +88,7 @@ const LEVEL = {
 };
 
 const LIFE = {
-    count: 3,
+    value: 3,
     position: {
         x: 10,
         y: 10,
@@ -89,13 +110,13 @@ const APPLE = [
     },
 ];
 
-const SNAKE = {
-    color: SNAKE_COLOR,
-    ...initHeadAndBody(),
+const SNAKE = initSnake("orange");
+
+const HEART = {
+    show: false,
     position: {
         x: initPosition(),
         y: initPosition(),
-        direction: initDirection(),
     },
     speed: 140,
     level: 0,
@@ -120,11 +141,26 @@ function drawApple() {
     );
 }
 
+function drawHeart() {
+    let img = new Image();
+    img.src = "/assets/images/heart.gif";
+
+    if (HEART.show) {
+        snakeCtx.drawImage(
+            img,
+            HEART.position.x,
+            HEART.position.y,
+            CELL_SIZE,
+            CELL_SIZE
+        );
+    }
+}
+
 function drawLife() {
     let img = new Image();
     img.src = "/assets/images/heart-red.png";
 
-    for (let i = 0; i < LIFE.count; i++) {
+    for (let i = 0; i < LIFE.value; i++) {
         const margin = i * 3;
         lifeCtx.drawImage(
             img,
@@ -137,7 +173,7 @@ function drawLife() {
 }
 
 function drawSnake() {
-    snakeCtx.fillStyle = SNAKE_COLOR;
+    snakeCtx.fillStyle = SNAKE.color;
     snakeCtx.fillRect(SNAKE.position.x, SNAKE.position.y, CELL_SIZE, CELL_SIZE);
 }
 
@@ -181,6 +217,23 @@ function startGame() {
         });
     }
 
+    function eatHeart() {
+        let life = new Audio();
+        life.src = "./assets/audio/life.wav";
+
+        if (
+            HEART.show &&
+            SNAKE.position.x == HEART.position.x &&
+            SNAKE.position.y == HEART.position.y
+        ) {
+            LIFE.value += 1;
+            HEART.show = false;
+            life.play();
+            HEART.position.x = initPosition();
+            HEART.position.y = initPosition();
+        }
+    }
+
     function teleport() {
         if (SNAKE.position.x < 0) {
             SNAKE.position.x = CANVAS_SIZE - CELL_SIZE;
@@ -200,24 +253,28 @@ function startGame() {
         SNAKE.position.x -= CELL_SIZE;
         teleport();
         eat();
+        eatHeart();
     }
 
     function moveRight() {
         SNAKE.position.x += CELL_SIZE;
         teleport();
         eat();
+        eatHeart();
     }
 
     function moveDown() {
         SNAKE.position.y += CELL_SIZE;
         teleport();
         eat();
+        eatHeart();
     }
 
     function moveUp() {
         SNAKE.position.y -= CELL_SIZE;
         teleport();
         eat();
+        eatHeart();
     }
 
     // load audio files
@@ -261,6 +318,7 @@ function startGame() {
         drawLife();
         drawSnake();
         drawApple();
+        drawHeart();
     }, REDRAW_INTERVAL);
 
     setInterval(
@@ -285,10 +343,10 @@ function startGame() {
     );
 }
 
-function moveBody() {
-    SNAKE.body.unshift({ x: SNAKE.head.x, y: SNAKE.head.y });
-    SNAKE.body.pop();
-}
+// FIXME : function moveBody() {
+//     SNAKE.body.unshift({ x: SNAKE.x, y: SNAKE.y });
+//     SNAKE.body.pop();
+// }
 
 // ==========================================
 // SECTION: START MENU
