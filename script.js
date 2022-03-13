@@ -22,6 +22,7 @@ const HEART_SPRITE = "./assets/images/heart.gif";
 const LIFE_SPRITE = "./assets/images/heart-red.png";
 const HEAD_SPRITE = "./assets/images/kepala.png";
 const BODY_SPRITE = "./assets/images/badan.png";
+const OBSTACLE_SPRITE = "./assets/images/obstacles/rectangle 20.png";
 
 const DIRECTION = {
     LEFT: 0,
@@ -76,7 +77,45 @@ const GAME = {
         value: 0,
     },
     level: {
-        value: 0,
+        value: 1,
+    },
+};
+
+const LEVEL = {
+    1: {
+        obstacles: [
+            { x: 0 * CELL_SIZE, y: 6 * CELL_SIZE },
+            { x: 1 * CELL_SIZE, y: 6 * CELL_SIZE },
+            { x: 2 * CELL_SIZE, y: 6 * CELL_SIZE },
+            { x: 3 * CELL_SIZE, y: 6 * CELL_SIZE },
+            { x: 4 * CELL_SIZE, y: 6 * CELL_SIZE },
+            { x: 5 * CELL_SIZE, y: 6 * CELL_SIZE },
+            { x: 6 * CELL_SIZE, y: 6 * CELL_SIZE },
+            { x: 7 * CELL_SIZE, y: 6 * CELL_SIZE },
+            { x: 8 * CELL_SIZE, y: 6 * CELL_SIZE },
+        ],
+    },
+    2: {
+        obstacles: [
+            { x: 3 * CELL_SIZE, y: 6 * CELL_SIZE },
+            { x: 5 * CELL_SIZE, y: 2 * CELL_SIZE },
+            { x: 6 * CELL_SIZE, y: 18 * CELL_SIZE },
+            { x: 10 * CELL_SIZE, y: 5 * CELL_SIZE },
+        ],
+    },
+    3: {
+        obstacles: [
+            { x: 3 * CELL_SIZE, y: 20 * CELL_SIZE },
+            { x: 6 * CELL_SIZE, y: 11 * CELL_SIZE },
+            { x: 10 * CELL_SIZE, y: 12 * CELL_SIZE },
+            { x: 11 * CELL_SIZE, y: 15 * CELL_SIZE },
+        ],
+    },
+    4: {
+        obstacles: [{ x: 4 * CELL_SIZE, y: 10 * CELL_SIZE }],
+    },
+    5: {
+        obstacles: [{ x: 7 * CELL_SIZE, y: 11 * CELL_SIZE }],
     },
 };
 
@@ -90,7 +129,8 @@ const LIFE = {
     },
 };
 
-const APPLE = [{
+const APPLE = [
+    {
         position: {
             x: initPosition(),
             y: initPosition(),
@@ -112,12 +152,14 @@ function initHeadBody() {
         },
     };
 
-    const body = [{
-        position: {
-            x: head.position.x,
-            y: head.position.y,
+    const body = [
+        {
+            position: {
+                x: head.position.x,
+                y: head.position.y,
+            },
         },
-    }, ];
+    ];
 
     return {
         head: head,
@@ -168,6 +210,12 @@ function drawLife() {
     }
 }
 
+function drawObstacle() {
+    LEVEL[GAME.level.value].obstacles.forEach((obstacle) =>
+        snakeCtx.drawImage(getImage(OBSTACLE_SPRITE), obstacle.x, obstacle.y, CELL_SIZE, CELL_SIZE)
+    );
+}
+
 function drawSnake() {
     SNAKE.body.forEach((body, index) => {
         if (index > 0) {
@@ -206,7 +254,7 @@ function levelUp() {
 }
 
 function eatApple() {
-    APPLE.forEach(function(apple, index) {
+    APPLE.forEach(function (apple, index) {
         if (SNAKE.head.position.x == apple.position.x && SNAKE.head.position.y == apple.position.y) {
             GAME.score.value += 1;
 
@@ -289,9 +337,10 @@ function moveBody() {
 }
 
 function startGame() {
-    setInterval(function() {
+    setInterval(function () {
         clearCanvas();
         drawMap();
+        drawObstacle();
         drawScore();
         drawSpeed();
         drawLevel();
@@ -303,7 +352,7 @@ function startGame() {
 
     snakeInterval = setInterval(() => move(SNAKE.direction), SNAKE.speed);
 
-    document.addEventListener("keydown", function(event) {
+    document.addEventListener("keydown", function (event) {
         if (event.key === "ArrowLeft") {
             if (SNAKE.direction !== DIRECTION.RIGHT) {
                 if (SNAKE.direction !== DIRECTION.LEFT) playSound("./assets/audio/left.mp3");
