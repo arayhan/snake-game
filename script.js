@@ -257,6 +257,11 @@ function drawMap() {
 function levelUp() {
     playSound("./assets/audio/nextlevel.mp3");
     GAME.level.value += 1;
+
+    if (GAME.level.value === 3) {
+        LIFE.value += 3;
+    }
+
     SNAKE.speed = LEVEL[GAME.level.value].speed;
     clearInterval(snakeInterval);
     snakeInterval = setInterval(() => move(SNAKE.direction), SNAKE.speed);
@@ -269,20 +274,16 @@ function hitTheWall() {
 
             playSound("./assets/audio/obstacle.wav");
 
-            SNAKE.body = [
-                {
-                    sprite: BODY_SPRITE,
-                    position: {
-                        x: SNAKE.head.position.x,
-                        y: SNAKE.head.position.y,
-                    },
-                },
-            ];
+            SNAKE.head.position = {
+                x: initPosition(),
+                y: initPosition(),
+            };
 
             GAME.level.value = 1;
 
-            if (LIFE.value === 0) {
+            if (LIFE.value < 0) {
                 alert("GAME OVER!");
+                window.location.reload();
             }
         }
     });
