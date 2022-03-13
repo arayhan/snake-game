@@ -39,6 +39,10 @@ function clearCanvas() {
     snakeCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 }
 
+function clearLifeCanvas() {
+    lifeCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+}
+
 function isPrimeNumber(num) {
     for (var i = 2; i <= Math.floor(num / 2); i++) {
         if (num % i === 0) {
@@ -258,6 +262,32 @@ function levelUp() {
     snakeInterval = setInterval(() => move(SNAKE.direction), SNAKE.speed);
 }
 
+function hitTheWall() {
+    LEVEL[GAME.level.value].obstacles.forEach((obstacle) => {
+        if (SNAKE.head.position.x == obstacle.x && SNAKE.head.position.y == obstacle.y) {
+            LIFE.value -= 1;
+
+            playSound("./assets/audio/obstacle.wav");
+
+            SNAKE.body = [
+                {
+                    sprite: BODY_SPRITE,
+                    position: {
+                        x: SNAKE.head.position.x,
+                        y: SNAKE.head.position.y,
+                    },
+                },
+            ];
+
+            GAME.level.value = 1;
+
+            if (LIFE.value === 0) {
+                alert("GAME OVER!");
+            }
+        }
+    });
+}
+
 function eatApple() {
     APPLE.forEach(function (apple, index) {
         if (SNAKE.head.position.x == apple.position.x && SNAKE.head.position.y == apple.position.y) {
@@ -313,6 +343,7 @@ function move(direction) {
     teleport();
     eatApple();
     eatHeart();
+    hitTheWall();
 
     switch (direction) {
         case DIRECTION.LEFT:
@@ -343,6 +374,7 @@ function moveBody() {
 
 function startGame() {
     setInterval(function () {
+        clearLifeCanvas();
         clearCanvas();
         drawMap();
         drawObstacle();
