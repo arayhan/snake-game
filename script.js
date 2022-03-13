@@ -254,13 +254,25 @@ function drawMap() {
 // SECTION: GAMEPLAY
 // ==========================================
 
+function winTheGame() {
+    alert("CONGRATULATIONS, YOU WIN THE GAME!");
+    window.location.reload();
+}
+
+function gameOver() {
+    playSound("./assets/audio/gameover.mp3");
+    setTimeout(() => {
+        alert("GAME OVER!");
+        window.location.reload();
+    }, 100);
+}
+
 function levelUp() {
     playSound("./assets/audio/nextlevel.mp3");
     GAME.level.value += 1;
 
-    if (GAME.level.value === 3) {
-        LIFE.value += 3;
-    }
+    if (GAME.level.value === 3) LIFE.value += 3;
+    if (GAME.level.value > 5) winTheGame();
 
     SNAKE.speed = LEVEL[GAME.level.value].speed;
     clearInterval(snakeInterval);
@@ -282,8 +294,7 @@ function hitTheWall() {
             GAME.level.value = 1;
 
             if (LIFE.value < 0) {
-                alert("GAME OVER!");
-                window.location.reload();
+                gameOver();
             }
         }
     });
