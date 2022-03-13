@@ -6,6 +6,7 @@ let snakeCanvas = document.getElementById("snakeBoard");
 let lifeCanvas = document.getElementById("lifeBoard");
 let elScore = document.getElementById("score");
 let elSpeed = document.getElementById("speed");
+let elLevel = document.getElementById("level");
 
 let snakeCtx = snakeCanvas.getContext("2d");
 let lifeCtx = lifeCanvas.getContext("2d");
@@ -61,6 +62,10 @@ const SPEED = {
     value: 140,
 };
 
+const LEVEL = {
+    value: 0,
+};
+
 const LIFE = {
     count: 3,
     position: {
@@ -93,6 +98,7 @@ const SNAKE = {
         direction: initDirection(),
     },
     speed: 140,
+    level: 0,
 };
 
 // ==========================================
@@ -159,6 +165,17 @@ function startGame() {
                     SPEED.value -= 20;
                 } else if (SCORE.value == 25) {
                     SPEED.value -= 20;
+                }
+                if (SCORE.value == 0) {
+                    LEVEL.value += 1;
+                } else if (SCORE.value == 5) {
+                    LEVEL.value += 1;
+                } else if (SCORE.value == 10) {
+                    LEVEL.value += 1;
+                } else if (SCORE.value == 15) {
+                    LEVEL.value += 1;
+                } else if (SCORE.value == 20) {
+                    LEVEL.value += 1;
                 }
             }
         });
@@ -238,6 +255,7 @@ function startGame() {
     setInterval(function () {
         elScore.innerHTML = SCORE.value;
         elSpeed.innerHTML = SPEED.value;
+        elLevel.innerHTML = LEVEL.value;
         // elSpeed.innerHTML = snake.speed;
         snakeCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
         drawLife();
@@ -245,22 +263,26 @@ function startGame() {
         drawApple();
     }, REDRAW_INTERVAL);
 
-    setInterval(function () {
-        switch (SNAKE.direction) {
-            case DIRECTION.LEFT:
-                moveLeft();
-                break;
-            case DIRECTION.RIGHT:
-                moveRight();
-                break;
-            case DIRECTION.DOWN:
-                moveDown();
-                break;
-            case DIRECTION.UP:
-                moveUp();
-                break;
-        }
-    }, SPEED.value);
+    setInterval(
+        function () {
+            switch (SNAKE.direction) {
+                case DIRECTION.LEFT:
+                    moveLeft();
+                    break;
+                case DIRECTION.RIGHT:
+                    moveRight();
+                    break;
+                case DIRECTION.DOWN:
+                    moveDown();
+                    break;
+                case DIRECTION.UP:
+                    moveUp();
+                    break;
+            }
+        },
+        SPEED.value,
+        LEVEL.value
+    );
 }
 
 function moveBody() {
