@@ -181,9 +181,9 @@ function drawSnake() {
     snakeCtx.fillStyle = SNAKE.color;
     snakeCtx.fillRect(SNAKE.head.position.x, SNAKE.head.position.y, CELL_SIZE, CELL_SIZE);
 
-    SNAKE.body.forEach((body) => {
+    SNAKE.body.forEach((body, index) => {
         const x = body.position.x;
-        snakeCtx.fillRect(x, body.position.y, CELL_SIZE, CELL_SIZE);
+        if (index > 0) snakeCtx.fillRect(x, body.position.y, CELL_SIZE, CELL_SIZE);
     });
 }
 
@@ -197,6 +197,10 @@ function drawSpeed() {
 
 function drawLevel() {
     elLevel.innerHTML = GAME.level.value;
+}
+
+function drawMap() {
+    snakeCtx.drawImage(getImage("/assets/images/ground.png"), 0, 0, CANVAS_SIZE, CANVAS_SIZE);
 }
 
 // ==========================================
@@ -290,6 +294,7 @@ function moveBody() {
 function startGame() {
     setInterval(function () {
         clearCanvas();
+        drawMap();
         drawScore();
         drawSpeed();
         drawLevel();
