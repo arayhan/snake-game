@@ -5,6 +5,8 @@
 let snakeCanvas = document.getElementById("snakeBoard");
 let lifeCanvas = document.getElementById("lifeBoard");
 let elScore = document.getElementById("score");
+let elSpeed = document.getElementById("speed");
+let elLevel = document.getElementById("level");
 
 let snakeCtx = snakeCanvas.getContext("2d");
 let lifeCtx = lifeCanvas.getContext("2d");
@@ -12,7 +14,8 @@ let lifeCtx = lifeCanvas.getContext("2d");
 const CANVAS_SIZE = snakeCtx.canvas.width;
 const CELL_SIZE = 20;
 const REDRAW_INTERVAL = 20;
-const SNAKE_INTERVAL = 80;
+const SNAKE_INTERVAL = 100;
+
 const DIRECTION = {
     LEFT: 0,
     RIGHT: 1,
@@ -56,6 +59,14 @@ function playSound(src) {
 // ==========================================
 
 const SCORE = {
+    value: 0,
+};
+
+const SPEED = {
+    value: 140,
+};
+
+const LEVEL = {
     value: 0,
 };
 
@@ -139,6 +150,14 @@ function drawScore() {
     elScore.innerHTML = SCORE.value;
 }
 
+function drawSpeed() {
+    elSpeed.innerHTML = SPEED.value;
+}
+
+function drawLevel() {
+    elLevel.innerHTML = LEVEL.value;
+}
+
 // ==========================================
 // SECTION: GAMEPLAY
 // ==========================================
@@ -152,7 +171,13 @@ function eatApple() {
                 HEART.show = true;
             }
 
+            if (SCORE.value % 5 === 0) {
+                LEVEL.value += 1;
+                SPEED.value -= 20;
+            }
+
             playSound("./assets/audio/eat.mp3");
+
             APPLE[index].position.x = initPosition();
             APPLE[index].position.y = initPosition();
         }
@@ -210,6 +235,8 @@ function startGame() {
     setInterval(function () {
         clearCanvas();
         drawScore();
+        drawSpeed();
+        drawLevel();
         drawLife();
         drawSnake();
         drawApple();
