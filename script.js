@@ -102,7 +102,7 @@ const HEART = {
 
 const LEVEL = {
     1: {
-        speed: SNAKE.speed - 10,
+        speed: SNAKE.speed,
         obstacles: [
             { x: 9 * CELL_SIZE, y: 10 * CELL_SIZE },
             { x: 10 * CELL_SIZE, y: 10 * CELL_SIZE },
@@ -352,7 +352,7 @@ function drawScore() {
 }
 
 function drawSpeed() {
-    elSpeed.innerHTML = SNAKE.speed + "ms";
+    elSpeed.innerHTML = LEVEL[GAME.level.value].speed + "ms";
 }
 
 function drawLevel() {
@@ -383,6 +383,12 @@ function gameOver() {
     }, 100);
 }
 
+function reAdjustSpeed() {
+    SNAKE.speed = LEVEL[GAME.level.value].speed;
+    clearInterval(snakeInterval);
+    snakeInterval = setInterval(() => move(SNAKE.direction), SNAKE.speed);
+}
+
 function levelUp() {
     playSound("./assets/audio/nextlevel.mp3");
     GAME.level.value += 1;
@@ -390,10 +396,7 @@ function levelUp() {
     if (GAME.level.value === 3) LIFE.value += 3;
     if (GAME.level.value > 5) winTheGame();
 
-    // re-adjust speed
-    SNAKE.speed = LEVEL[GAME.level.value].speed;
-    clearInterval(snakeInterval);
-    snakeInterval = setInterval(() => move(SNAKE.direction), SNAKE.speed);
+    reAdjustSpeed();
 }
 
 function hitTheWall() {
@@ -476,6 +479,7 @@ function move(direction) {
     eatApple();
     eatHeart();
     hitTheWall();
+    reAdjustSpeed();
 
     switch (direction) {
         case DIRECTION.LEFT:
