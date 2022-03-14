@@ -360,7 +360,7 @@ function drawLevel() {
 }
 
 function drawMap() {
-    snakeCtx.drawImage(getImage("/assets/images/ground.png"), 0, 0, CANVAS_SIZE, CANVAS_SIZE);
+    snakeCtx.drawImage(getImage(MAP_SPRITE), 0, 0, CANVAS_SIZE, CANVAS_SIZE);
 }
 
 // ==========================================
