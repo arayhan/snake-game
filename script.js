@@ -365,7 +365,7 @@ function drawMap() {
 // ==========================================
 
 function winTheGame() {
-    playSound("./assets/audio/winning.wav");
+    playSound("./assets/audio/winning.mp3");
     setTimeout(() => {
         alert("CONGRATULATIONS, YOU WIN THE GAME!");
         window.location.reload();
